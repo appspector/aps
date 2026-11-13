@@ -1,0 +1,34 @@
+{
+  "name": "appspector",
+  "version": "0.1.0",
+  "description": "Debug iOS and Android apps with AppSpector: HTTP traffic, logs, performance, screenshots and SQLite from live and past sessions, through the aps MCP server.",
+  "author": {
+    "name": "AppSpector",
+    "url": "https://appspector.com"
+  },
+  "homepage": "https://appspector.com",
+  "license": "LicenseRef-Proprietary",
+  "keywords": [
+    "appspector",
+    "mobile",
+    "ios",
+    "android",
+    "debugging",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "AppSpector",
+    "shortDescription": "Debug mobile apps from their AppSpector sessions",
+    "longDescription": "Ask about what your iOS or Android app did: failed requests, error logs, performance, screenshots and its SQLite data, live or from past AppSpector sessions. Uses the aps CLI's MCP server; everything is read-only.",
+    "developerName": "AppSpector",
+    "category": "Developer Tools",
+    "websiteURL": "https://appspector.com",
+    "defaultPrompt": [
+      "Which requests failed in my app's latest session, and why?",
+      "Find errors in the app's logs around the last failure",
+      "Wait for the next 5xx while I reproduce the bug"
+    ]
+  }
+}

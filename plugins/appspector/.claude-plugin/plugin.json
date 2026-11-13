@@ -1,0 +1,20 @@
+{
+  "name": "appspector",
+  "displayName": "AppSpector",
+  "version": "0.1.0",
+  "description": "Debug iOS and Android apps with AppSpector: HTTP traffic, logs, performance, screenshots and SQLite from live and past sessions, through the aps MCP server.",
+  "author": {
+    "name": "AppSpector",
+    "url": "https://appspector.com"
+  },
+  "homepage": "https://appspector.com",
+  "license": "LicenseRef-Proprietary",
+  "keywords": [
+    "appspector",
+    "mobile",
+    "ios",
+    "android",
+    "debugging",
+    "mcp"
+  ]
+}

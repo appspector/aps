@@ -1,0 +1,94 @@
+#!/bin/sh
+# Starts AppSpector's MCP server (`aps mcp`) for Claude Code and Codex.
+#
+# Agent apps opened from the Dock (the Claude desktop app, the Codex app) often don't get the
+# shell's PATH, so this looks for aps in turn:
+#   1. on PATH
+#   2. in /opt/homebrew/bin, /usr/local/bin, ~/.local/bin and ~/.cargo/bin
+#   3. at the path aps records about itself on every run (`aps-path` in its config folder:
+#      $APS_CONFIG_DIR, ~/Library/Application Support/com.appspector.aps, or
+#      ${XDG_CONFIG_HOME:-~/.config}/aps)
+# If none has it, it says how to install aps on stderr and exits with 127.
+#
+#   aps-mcp [args…]   run `aps mcp args…`
+#   aps-mcp --check   print where aps is and its version, or the install instructions
+#
+# APS_LAUNCHER_SEARCH replaces the list in step 2 (paths separated by `:`; for tests).
+# POSIX sh: no bashisms. Windows isn't supported yet.
+set -eu
+
+here=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
+# How to install aps: one line, kept in install-hint.txt (scripts/plugins/render.sh copies it
+# into the setup skill and the README).
+install_hint() {
+    if [ -r "$here/install-hint.txt" ]; then
+        sed -n '1p' "$here/install-hint.txt"
+    else
+        echo "see the AppSpector plugin's README"
+    fi
+}
+
+is_aps() {
+    [ -n "$1" ] && [ -f "$1" ] && [ -x "$1" ]
+}
+
+search_list() {
+    if [ "${APS_LAUNCHER_SEARCH+set}" = set ]; then
+        printf '%s\n' "$APS_LAUNCHER_SEARCH" | tr ':' '\n'
+    else
+        printf '%s\n' /opt/homebrew/bin/aps /usr/local/bin/aps "$HOME/.local/bin/aps" \
+            "$HOME/.cargo/bin/aps"
+    fi
+}
+
+find_aps() {
+    # 1. PATH
+    if found=$(command -v aps 2>/dev/null) && is_aps "$found"; then
+        printf '%s\n' "$found"
+        return 0
+    fi
+    # 2. Where installers put it (one path per line, so folders with spaces work)
+    while IFS= read -r candidate; do
+        if is_aps "$candidate"; then
+            printf '%s\n' "$candidate"
+            return 0
+        fi
+    done <<EOF
+$(search_list)
+EOF
+    # 3. Where aps last ran from
+    for dir in "${APS_CONFIG_DIR:-}" "$HOME/Library/Application Support/com.appspector.aps" \
+        "${XDG_CONFIG_HOME:-$HOME/.config}/aps"; do
+        if [ -n "$dir" ] && [ -r "$dir/aps-path" ]; then
+            recorded=$(sed -n '1p' "$dir/aps-path")
+            if is_aps "$recorded"; then
+                printf '%s\n' "$recorded"
+                return 0
+            fi
+        fi
+    done
+    return 1
+}
+
+not_installed() {
+    echo "aps isn't installed — $(install_hint)" >&2
+    echo "(looked on PATH, in /opt/homebrew/bin, /usr/local/bin, ~/.local/bin, ~/.cargo/bin, and for the path aps records in its config folder)" >&2
+    exit 127
+}
+
+if ! aps=$(find_aps); then
+    not_installed
+fi
+
+if [ "${1:-}" = "--check" ]; then
+    printf 'aps: %s\n' "$aps"
+    "$aps" --version
+    exit 0
+fi
+
+# Tells `aps mcp` that this folder is the plugin's, not the project's: Codex starts the server
+# here and doesn't say which folder the chat is in.
+APS_PLUGIN_ROOT=$(dirname -- "$here")
+export APS_PLUGIN_ROOT
+exec "$aps" mcp "$@"

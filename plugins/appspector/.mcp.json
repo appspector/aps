@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "appspector": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "r=$CLAUDE_PLUGIN_ROOT; [ -n \"$r\" ] || r=$PLUGIN_ROOT; [ -n \"$r\" ] || r=.; exec \"$r/scripts/aps-mcp\""
+      ],
+      "cwd": "."
+    }
+  }
+}

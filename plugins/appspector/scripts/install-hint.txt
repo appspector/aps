@@ -1,0 +1,1 @@
+install it with Homebrew: brew install appspector/aps/aps (to upgrade: brew upgrade aps), then restart the agent

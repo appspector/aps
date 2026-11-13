@@ -1,0 +1,18 @@
+{
+  "name": "appspector",
+  "owner": {
+    "name": "AppSpector",
+    "url": "https://appspector.com"
+  },
+  "description": "AppSpector for coding agents: debug mobile apps from their AppSpector sessions.",
+  "plugins": [
+    {
+      "name": "appspector",
+      "source": "./plugins/appspector",
+      "description": "Debug iOS and Android apps with AppSpector: HTTP traffic, logs, performance, screenshots and SQLite from live and past sessions, through the aps MCP server.",
+      "version": "0.1.0",
+      "category": "development",
+      "homepage": "https://appspector.com"
+    }
+  ]
+}
