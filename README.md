@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="aps-header.png" alt="aps: the AppSpector CLI" width="100%">
+</p>
+
 # aps: the AppSpector CLI
 
 `aps` is the command-line client for [AppSpector](https://appspector.com), the remote debugger for iOS and Android apps. From a terminal or an AI coding agent, it lists your apps and sessions, streams a session's events (HTTP traffic, logs, performance and more), answers narrow questions about them ("failed requests in the last 5 minutes", "error logs mentioning checkout"), and queries a running app (screenshot, SQLite, files). Secrets in the app's data are masked, and everything is read-only.
